@@ -14,11 +14,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var tipLabel: UILabel!
     @IBOutlet weak var billField: UITextField!
     @IBOutlet weak var tipAmountSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var people2Label: UILabel!
+    @IBOutlet weak var people3Label: UILabel!
+    @IBOutlet weak var people4Label: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         print("view did load")
+        self.view.tintColor = UIColor.redColor()
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,6 +41,9 @@ class ViewController: UIViewController {
         
         tipLabel.text = String(format: "$%.2f", tip)
         totalLabel.text = String(format: "$%.2f", total)
+        people2Label.text = String(format: "$%.2f", total / 2)
+        people3Label.text = String(format: "$%.2f", total / 3)
+        people4Label.text = String(format: "$%.2f", total / 4)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -53,6 +59,7 @@ class ViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         print("view did appear")
+        billField.becomeFirstResponder()
     }
     
     override func viewWillDisappear(animated: Bool) {
