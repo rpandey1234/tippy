@@ -39,11 +39,14 @@ class ViewController: UIViewController {
         let tip = bill * tipPercentages[tipAmountSegmentedControl.selectedSegmentIndex]
         let total = bill + tip
         
-        tipLabel.text = String(format: "$%.2f", tip)
-        totalLabel.text = String(format: "$%.2f", total)
-        people2Label.text = String(format: "$%.2f", total / 2)
-        people3Label.text = String(format: "$%.2f", total / 3)
-        people4Label.text = String(format: "$%.2f", total / 4)
+        let formatter = NSNumberFormatter()
+        formatter.numberStyle = .CurrencyStyle
+        
+        tipLabel.text = formatter.stringFromNumber(tip)
+        totalLabel.text = formatter.stringFromNumber(total)
+        people2Label.text = formatter.stringFromNumber(total / 2)
+        people3Label.text = formatter.stringFromNumber(total / 3)
+        people4Label.text = formatter.stringFromNumber(total / 4)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -52,8 +55,13 @@ class ViewController: UIViewController {
         let defaults = NSUserDefaults.standardUserDefaults()
         let defaultIndex = defaults.objectForKey("index_selected") as? Int ?? 0
         print("default index: ", defaultIndex)
+        
+        let savedBillAmount = defaults.objectForKey("bill_amount") as? Double ?? 0
+        billField.text = String(savedBillAmount)
+        
         tipAmountSegmentedControl.selectedSegmentIndex = defaultIndex
         calculateTip(totalLabel)
+        view.backgroundColor = UIColor(red: 200/255, green: 200/255, blue: 240/255, alpha: 0.99)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -64,6 +72,9 @@ class ViewController: UIViewController {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let bill = Double(billField.text!) ?? 0
+        defaults.setDouble(bill, forKey: "bill_amount")
         print("view will disappear")
     }
     
