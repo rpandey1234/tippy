@@ -9,7 +9,9 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    let SECONDS_THRESHOLD = Double(10 * 60)
+    
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var tipLabel: UILabel!
     @IBOutlet weak var billField: UITextField!
@@ -56,8 +58,15 @@ class ViewController: UIViewController {
         let defaultIndex = defaults.objectForKey("index_selected") as? Int ?? 0
         print("default index: ", defaultIndex)
         
-        let savedBillAmount = defaults.objectForKey("bill_amount") as? Double ?? 0
-        billField.text = String(savedBillAmount)
+        let secondsPreviousEnd = defaults.objectForKey("seconds_app_end") as? Double ?? 0
+        let currentSeconds = NSDate().timeIntervalSince1970
+        
+        print("time gap in seconds", currentSeconds - secondsPreviousEnd)
+        if (currentSeconds - secondsPreviousEnd < SECONDS_THRESHOLD) {
+            let savedBillAmount = defaults.objectForKey("bill_amount") as? Double ?? 0
+            billField.text = String(savedBillAmount)
+        }
+        
         
         tipAmountSegmentedControl.selectedSegmentIndex = defaultIndex
         calculateTip(totalLabel)
@@ -73,8 +82,13 @@ class ViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         let defaults = NSUserDefaults.standardUserDefaults()
+        
         let bill = Double(billField.text!) ?? 0
         defaults.setDouble(bill, forKey: "bill_amount")
+        
+        let secondsAppEnd = NSDate().timeIntervalSince1970
+        defaults.setDouble(secondsAppEnd, forKey: "seconds_app_end")
+        
         print("view will disappear")
     }
     
